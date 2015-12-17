@@ -2,17 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-browser = webdriver.Chrome()
-browser.get('http://localhost:8000')
-
-
-
-
-
 class NewVisitorTest(unittest.TestCase):
+
+	browser = webdriver.Chrome()
+	browser.get('http://localhost:8000')
 	
 	def setUp(self):
-		self.browser = webdriver.Chrome()
 		self.browser.implicitly_wait(3)
 
 	def tearDown(self):
@@ -33,10 +28,10 @@ class NewVisitorTest(unittest.TestCase):
 
 		#Test to see if we can enter a new item
 		inputbox.send_keys('Buy a peacock feathers')
-		inputbox.send_keys(Keys.Enter)
+		inputbox.send_keys(Keys.ENTER)
 
-		table = self.find_element_by_id('id_list_table')
-		rows = self.find_element_by_tag_name('tr')
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_elements_by_tag_name('tr')
 		self.assertTrue(
 			any(row.text == '1: Buy a peacock feathers' for row in rows)
 		)
@@ -44,6 +39,7 @@ class NewVisitorTest(unittest.TestCase):
 		# There is still a text box inviting her to add another item. She
         # enters "Use peacock feathers to make a fly" (Edith is very
         # methodical)
+		tearDown()
 		self.fail('Finish the test!')
 
 if __name__ == '__main__':
