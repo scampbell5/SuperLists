@@ -49,7 +49,8 @@ class NewVisitorTest(LiveServerTestCase):
 
 		self.browser.quit()
 
-		#New user comes along
+		## New user comes along and opens a new browser
+		## Tests to make sure previous user's list is not there
 		self.browser = webdriver.Chrome()
 		self.browser.get(self.live_server_url)
 		page_text = self.browser.find_element_by_tag_name('body').text
