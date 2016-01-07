@@ -42,7 +42,7 @@ class ItemValidationTest(FunctionalTest):
 		self.check_for_row_in_list_table('1: Buy willies')
 
 		#User tries to enter the same item, twice
-		self.get_item_input_box().send_keys('Buy willies')
+		self.get_item_input_box().send_keys('Buy willies\n')
 
 		#Checks for error on the page
 		error = self.browser.find_element_by_css_selector('.has-error')
