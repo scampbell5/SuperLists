@@ -2,7 +2,10 @@ from .base import FunctionalTest
 from unittest import skip
 
 class ItemValidationTest(FunctionalTest):
-	
+
+	def get_error_element(self):
+		return self.browser.find_element_by_css_selector('.has-error')
+
 	def test_cannot_add_empty_list_item(self):
 
 		self.browser.get(self.server_url)
@@ -11,7 +14,7 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('\n')
 
 		#Looks on page to find an error
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 
 		#Checks the error text to verify that it indicates list cannot be blank
 		self.assertEqual(error.text, "You can't have an empty list item")
@@ -25,7 +28,7 @@ class ItemValidationTest(FunctionalTest):
 		#Checks that valid item is in list
 		self.check_for_row_in_list_table('1: Buy milk')
 		self.get_item_input_box().send_keys('\n')
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertEqual(error.text, "You can't have an empty list item")
 
 		#Adds another valid list item
@@ -45,8 +48,22 @@ class ItemValidationTest(FunctionalTest):
 		self.get_item_input_box().send_keys('Buy willies\n')
 
 		#Checks for error on the page
-		error = self.browser.find_element_by_css_selector('.has-error')
+		error = self.get_error_element()
 		self.assertEqual(error.text, "You've already got this in your list")
+
+	def test_error_messages_are_cleared_on_input(self):
+		self.browser.get(self.server_url)
+
+		#Sends an empty string, should generate an error
+		self.get_item_input_box().send_keys('\n')
+
+		error = self.get_error_element()
+		self.assertTrue(error.is_displayed())
+
+		#Starts typing should remove the error
+		self.get_item_input_box().send_keys('a')
+		error = self.get_error_element()
+		self.assertFalse(error.is_displayed())
 
 
 
